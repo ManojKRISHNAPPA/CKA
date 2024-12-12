@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-ds
+  labels:
+    name: myapp-pod
+spec:
+## here we dont need replicas as in deployment beacuse irrespective of replica it will automatically create  replica
+## it might schedule it on different nodes reason is node tolerations
+  selector:
+    matchLabels:
+      name: myapp-pod
+  template:
+    metadata:
+      labels:
+        name: myapp-pod
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+
+
