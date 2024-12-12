@@ -3,6 +3,9 @@
 
 Welcome to the Kubernetes Requests & Limits guide! This document complements our video explaining managing resource allocation in your Kubernetes cluster. Let’s explore the essentials of Requests and Limits, why they matter, and how to use them effectively.
 
+![img.png](img.png)
+
+![img_1.png](img_1.png)
 ---
 
 ## 🏙️ What's the Deal with Requests & Limits?
