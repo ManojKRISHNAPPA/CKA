@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp-pod
+spec:
+  containers:
+    - name: myapp-container
+      image: busybox:1.28 # here its generic image which maintained by kubernetes which does some specif task
+      command: ['sh', '-c', 'echo app is running && sleep 3600'] ## here we can add args and command together also if we want to separate you can look for init containers
+      env:
+        - name: FIRSTNAME
+          value: "Manoj"
+## adding multiple containers
+  initContainers:
+    - name: init-myservice
+      image: busybox:1.28
+      command: ['sh', '-c']
+      args: ['until nslookup myservice.default.svc.cluster.local; do echo "waiting for service to be up" && sleep 2; done'] ## here NSlookup command works only when service working fine and look for service
