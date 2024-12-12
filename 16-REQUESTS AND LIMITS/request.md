@@ -6,6 +6,7 @@ Welcome to the Kubernetes Requests & Limits guide! This document complements our
 ![img.png](img.png)
 
 ![img_1.png](img_1.png)
+
 ---
 
 ## 🏙️ What's the Deal with Requests & Limits?
