@@ -10,6 +10,7 @@ TLS/SSL protocols use asymmetric encryption (public-key cryptography) for establ
 **Encryption:** Ensures that the data exchanged between the client (e.g., browser) and the server is unreadable to third parties.
 **Integrity:** Ensures that the data has not been altered during transmission.
 **Authentication:** Confirms that the client is talking to the correct server and not an imposter.
+
 ![img.png](img.png)
 
 
