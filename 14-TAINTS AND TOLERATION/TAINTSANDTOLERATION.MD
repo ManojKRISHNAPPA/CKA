@@ -153,7 +153,7 @@ node/manoj-cka-cluster-worker3 untainted
 
 
 >Note: This pod specification defines a toleration for the "gpu" taint with the effect "NoSchedule." This allows the pod to be scheduled on tainted nodes.
-
+>Note: Contol plane as always in the taint thats why it should avoid that
 ### Labels vs Taints/Tolerations
 
 Labels group nodes based on size, type,env, etc. Unlike taints, labels don't directly affect scheduling but are useful for organizing resources.
@@ -162,3 +162,100 @@ Labels group nodes based on size, type,env, etc. Unlike taints, labels don't dir
 
 Taints and tolerations are powerful tools, but they have limitations. They cannot handle complex expressions like "AND" or "OR." 
 So, what do we use in that case? We use a combination of Taints, tolerance, and Node affinity, which we will discuss in the next video.
+
+
+## NodeSelectors:
+The way selctors works 
+Before that taints and toleration prevent one node to taint but what if we have without taint
+it will schedule on that node it doesnot guarenty where it will go n sit 
+
+It only restrict the pod scheduleing on that perticular node so we need to one function to it
+
+Inseted of node making descion we are giving pod decide node
+
+lets create a yaml with nodeselector
+
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: redis
+  name: redis
+spec:
+  containers:
+  - image: redis
+    name: redis
+  nodeSelector:
+    gpu: "false"  # Only schedule on nodes with gpu=false label
+
+```
+```commandline
+09:38:46 manojkrishnappa@Manojs-MacBook-Pro 14-TAINTS AND TOLERATION ±|main ✗|→ ls
+TAINTSANDTOLERATION.MD  img.png                 img_1.png               nodeselector.yml        pod.yml
+09:38:48 manojkrishnappa@Manojs-MacBook-Pro 14-TAINTS AND TOLERATION ±|main ✗|→ kubectl apply -f nodeselector.yml 
+pod/redis created
+09:38:54 manojkrishnappa@Manojs-MacBook-Pro 14-TAINTS AND TOLERATION ±|main ✗|→ kubectl get pods
+NAME    READY   STATUS    RESTARTS   AGE
+redis   0/1     Pending   0          5s
+
+```
+
+```commandline
+kubectl describe pod redis
+Name:             redis
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             <none>
+Labels:           run=redis
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Containers:
+  redis:
+    Image:        redis
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-qvgwb (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  kube-api-access-qvgwb:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              gpu=false
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  24s   default-scheduler  0/4 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 2 node(s) had untolerated taint {gpu: true}. preemption: 0/4 nodes are available: 4 Preemption is not helpful for scheduling.
+
+```
+lets match the labels with 
+
+```commandline
+09:40:54 manojkrishnappa@Manojs-MacBook-Pro 14-TAINTS AND TOLERATION ±|main ✗|→ kubectl label node manoj-cka-cluster-worker3 gpu=false
+node/manoj-cka-cluster-worker3 labeled
+09:41:14 manojkrishnappa@Manojs-MacBook-Pro 14-TAINTS AND TOLERATION ±|main ✗|→ kubectl get pods
+NAME    READY   STATUS    RESTARTS   AGE
+redis   0/1     Pending   0          2m25s
+
+```
+
+
+```commandline
+kubectl get nodes --show-labels
+manoj-cka-cluster-worker3         Ready    <none>          20d   v1.31.2   beta.kubernetes.io/arch=arm64,beta.kubernetes.io/os=linux,gpu=false,kubernetes.io/arch=arm64,kubernetes.io/hostname=manoj-cka-cluster-worker3,kubernetes.io/os=linux
+
+```
