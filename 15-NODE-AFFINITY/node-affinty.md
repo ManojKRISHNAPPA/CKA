@@ -15,9 +15,11 @@ Node Affinity lets you define complex rules for where your pods can be scheduled
 
 ---
 
+![img_2.png](img_2.png)
 ## Properties in Node Affinity
-- requiredDuringSchedulingIgnoredDuringExecution
-- preferredDuringSchedulingIgnoredDuringExecution
+- requiredDuringSchedulingIgnoredDuringExecution --> make sure that pod get only scheduled when the operator matches with the label
+- preferredDuringSchedulingIgnoredDuringExecution --> if will initially tried to match the labels but incase if it doesnot find it will schedule on pod which lable is empty
+![img_3.png](img_3.png)
 
 ## Required During Scheduling, Ignored During Execution 🛠️
 
@@ -122,6 +124,10 @@ nginx   1/1     Running   0          3m2s
 
 ## Schedule a Pod using preferred node affinity 
 **This manifest describes a Pod that has a preferredDuringSchedulingIgnoredDuringExecution node affinity,disktype: ssd. This means that the pod will prefer a node that has a disktype=ssd label.**
+
+```commandline
+kubectl label node manoj-cka-cluster-worker disktype=
+```
 
 ```commandline
 

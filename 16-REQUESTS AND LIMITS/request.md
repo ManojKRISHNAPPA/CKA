@@ -163,3 +163,4 @@ manoj-cka-cluster-worker3         24m          0%     158Mi           7%
 
 ```
 
+![img_2.png](img_2.png)
