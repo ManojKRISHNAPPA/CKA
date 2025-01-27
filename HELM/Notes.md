@@ -613,3 +613,90 @@ release "myhelloworld" uninstalled
 ```
 ![img_12.png](img_12.png)
 
+## creating a cutsom chart with python image
+
+```commandline
+root@ip-172-31-17-47:~# helm create python-flask-api
+Creating python-flask-api
+root@ip-172-31-17-47:~# ls
+CKA  helloworld  kubernetes-docs  python-flask-api  snap
+
+
+```
+
+update docker image into chart.yml
+commented out 
+```commandline
+# It is recommended to use it with quotes.
+#appVersion: "1.16.0"
+
+```
+
+update values.yml
+
+```commandline
+image:
+  repository: manojkrishnappa/my-python-image:20240808
+
+
+service:
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: NodePort
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 80
+
+```
+change deployment.yml in charts because we have specified contianer port as 9001 and also 
+comment out probes
+
+
+```commandline
+keep image section like this 
+
+image: "{{ .Values.image.repository }}"
+
+
+port change to 9001
+
+      livenessProbe: 
+            {{- toYaml . | nindent 12 }} 
+          {{- end }} 
+          {{- with .Values.readinessProbe }} 
+          readinessProbe: 
+            {{- toYaml . | nindent 12 }} 
+          {{- end }} 
+          {{- with .Values.resources }}
+
+```
+
+```commandline
+root@ip-172-31-17-47:~# helm install mypythonhelm python-flask-api
+W0127 19:03:50.614089   71447 warnings.go:70] unknown field "spec.template.spec.containers[0].resources.httpGet"
+NAME: mypythonhelm
+LAST DEPLOYED: Mon Jan 27 19:03:50 2025
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services mypythonhelm-python-flask-api)
+  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+root@ip-172-31-17-47:~# 
+
+```
+
+```commandline
+root@ip-172-31-17-47:~# kubectl get deployments
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+mypythonhelm-python-flask-api   0/1     1            0           18s
+root@ip-172-31-17-47:~# kubectl get deployments
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+mypythonhelm-python-flask-api   1/1     1            1           20s
+root@ip-172-31-17-47:~# kubectl get svc
+NAME                            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                      ClusterIP   10.152.183.1     <none>        443/TCP        4h55m
+mypythonhelm-python-flask-api   NodePort    10.152.183.107   <none>        80:31839/TCP   24s
+root@ip-172-31-17-47:~# 
+
+```
