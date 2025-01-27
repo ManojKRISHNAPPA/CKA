@@ -1,0 +1,76 @@
+<style>
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Title */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Movie list container */
+.movie-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Individual movie card styling */
+.movie-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+}
+
+.movie-card h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.movie-card p {
+    font-size: 1rem;
+    color: #555;
+}
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Movie List</h1>
+        <div class="movie-list">
+            {% for movie in movies %}
+                <div class="movie-card">
+                    <h2>{{ movie.title }}</h2>
+                    <p><strong>Year:</strong> {{ movie.year }}</p>
+                    <p><strong>Genre:</strong> {{ movie.genre }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
