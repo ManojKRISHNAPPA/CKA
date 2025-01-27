@@ -2,8 +2,7 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Sample data for movies
-# Sample data for top anime
+# Sample data for anime list
 anime_list = [
     {"id": 1, "title": "Fullmetal Alchemist: Brotherhood", "year": 2009, "genre": "Action, Adventure, Fantasy"},
     {"id": 2, "title": "Attack on Titan", "year": 2013, "genre": "Action, Drama, Fantasy"},
@@ -17,10 +16,9 @@ anime_list = [
     {"id": 10, "title": "Cowboy Bebop", "year": 1998, "genre": "Action, Adventure, Sci-Fi"}
 ]
 
-
 @app.route('/')
 def index():
-    return render_template('index.html', movies=movies)
+    return render_template('index.html', anime=anime_list)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9001)
